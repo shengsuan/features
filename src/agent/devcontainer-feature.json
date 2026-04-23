@@ -1,0 +1,53 @@
+{
+    "id": "agent",
+    "version": "1.0.0",
+    "name": "AI Agent Tools",
+    "documentationURL": "https://github.com/devcontainers/features/tree/main/src/agent",
+    "description": "Installs AI programming agent tools including Claude Code CLI, OpenAI Codex CLI, and integration SDKs.",
+    "options": {
+        "claudeCodeVersion": {
+            "type": "string",
+            "proposals": [
+                "latest",
+                "none"
+            ],
+            "default": "latest",
+            "description": "Version of Claude Code CLI to install. Use 'none' to skip installation."
+        },
+        "installCodex": {
+            "type": "boolean",
+            "default": true,
+            "description": "Install OpenAI Codex CLI and integration tools (SDKs for Python and Node.js)."
+        },
+        "installNode": {
+            "type": "boolean",
+            "default": true,
+            "description": "Install Node.js if not present (required for some AI tools)."
+        },
+        "installPython": {
+            "type": "boolean",
+            "default": true,
+            "description": "Install Python if not present (required for OpenAI tools)."
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "github.copilot.chat.codeGeneration.instructions": [
+                    {
+                        "text": "This dev container includes Claude Code CLI and OpenAI Codex CLI. Claude Code can be accessed via the `claude` command. OpenAI Codex can be accessed via the `codex` command. Both platforms have Python and Node.js SDKs available."
+                    }
+                ]
+            },
+            "extensions": [
+                "anthropics.claude-dev"
+            ]
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/git",
+        "ghcr.io/devcontainers/features/node",
+        "ghcr.io/devcontainers/features/python"
+    ]
+}

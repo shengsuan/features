@@ -41,7 +41,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Install basic dependencies
 echo "Installing basic dependencies..."
-check_packages curl ca-certificates wget gnupg2 software-properties-common
+check_packages curl ca-certificates wget gnupg2
 
 # Determine the appropriate non-root user
 USERNAME="${USERNAME:-"${_REMOTE_USER:-"automatic"}"}"
@@ -84,16 +84,16 @@ if [ "${CLAUDE_CODE_VERSION}" != "none" ]; then
     if ! type claude > /dev/null 2>&1; then
         echo "Installing Claude Code using official installer..."
 
-        # Download and run the official install script
-        if [ "${USERNAME}" = "root" ]; then
-            curl -fsSL https://claude.ai/install.sh | bash || echo "(!) Claude Code installation failed, creating fallback wrapper..."
-        else
-            su - "${USERNAME}" -c "curl -fsSL https://claude.ai/install.sh | bash" || echo "(!) Claude Code installation failed, creating fallback wrapper..."
-        fi
+        # Download and run the official install script (follow redirects with -L)
+        curl -fsSL https://claude.ai/install.sh | bash || echo "(!) Claude Code installation failed, creating fallback wrapper..."
     fi
 
     # Fallback: Create a wrapper script if installation failed
-    if ! type claude > /dev/null 2>&1 && ! type claude-code > /dev/null 2>&1; then
+    # Check both PATH and common installation locations
+    if ! type claude > /dev/null 2>&1 && \
+       ! [ -f "/usr/local/bin/claude" ] && \
+       ! [ -f "$HOME/.local/bin/claude" ] && \
+       ! [ -f "/home/$USERNAME/.local/bin/claude" ]; then
         echo "Creating Claude Code CLI wrapper..."
         cat > /usr/local/bin/claude << 'EOF'
 #!/bin/bash
@@ -110,6 +110,10 @@ echo "Visit https://console.anthropic.com/ to get your API key"
 echo "Documentation: https://code.claude.com/docs"
 EOF
         chmod +x /usr/local/bin/claude
+    elif [ -f "/home/$USERNAME/.local/bin/claude" ] && ! type claude > /dev/null 2>&1; then
+        # Claude installed to ~/.local/bin but not in PATH, create symlink
+        echo "Creating symlink to Claude Code CLI..."
+        ln -sf "/home/$USERNAME/.local/bin/claude" /usr/local/bin/claude
     fi
 
     echo "Claude Code CLI installation complete."
@@ -123,11 +127,7 @@ if [ "${INSTALL_CODEX}" = "true" ]; then
     # Reference: https://github.com/openai/codex
     if type npm > /dev/null 2>&1 && ! type codex > /dev/null 2>&1; then
         echo "Installing OpenAI Codex CLI..."
-        if [ "${USERNAME}" = "root" ]; then
-            npm install -g @openai/codex || echo "(!) Codex CLI installation failed"
-        else
-            su - "${USERNAME}" -c "npm install -g @openai/codex" || echo "(!) Codex CLI installation failed"
-        fi
+        npm install -g @openai/codex || echo "(!) Codex CLI installation failed"
     fi
 
     # Install Python OpenAI and Anthropic SDKs
@@ -143,11 +143,7 @@ if [ "${INSTALL_CODEX}" = "true" ]; then
     # Install Node.js OpenAI and Anthropic SDKs
     if type npm > /dev/null 2>&1; then
         echo "Installing Node.js SDKs..."
-        if [ "${USERNAME}" = "root" ]; then
-            npm install -g openai @anthropic-ai/sdk
-        else
-            su - "${USERNAME}" -c "npm install -g openai @anthropic-ai/sdk"
-        fi
+        npm install -g openai @anthropic-ai/sdk
     fi
 
     echo "OpenAI Codex tools installation complete."
@@ -157,11 +153,7 @@ echo "Installing Coding Helper integration tools..."
 # Reference: https://github.com/shengsuan/coding-helper
 if type npm > /dev/null 2>&1 && ! type coding-helper > /dev/null 2>&1; then
     echo "Installing Coding Helper..."
-    if [ "${USERNAME}" = "root" ]; then
-        npm install -g @coohu/coding-helper || echo "(!) Coding Helper installation failed"
-    else
-        su - "${USERNAME}" -c "npm install -g @coohu/coding-helper" || echo "(!) Coding Helper installation failed"
-    fi
+    npm install -g @coohu/coding-helper || echo "(!) Coding Helper installation failed"
 fi
 echo "Coding Helper tools installation complete."
 

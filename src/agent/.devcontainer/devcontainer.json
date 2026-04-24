@@ -1,8 +1,8 @@
 {
     "name": "AI Agent Development Container",
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
     "features": {
-        "ghcr.io/devcontainers/features/agent:1": {
+        "ghcr.io/shengsuan/features/agent:1": {
             "claudeCodeVersion": "latest",
             "installCodex": true,
             "installNode": true,
@@ -19,7 +19,11 @@
             }
         }
     },
+    "runArgs": [
+        "--name=agent-devcontainer"
+    ],
     "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:${containerEnv:HOME}/.local/bin",
         "SHENGSUANYUN_API_KEY": "${localEnv:SHENGSUANYUN_API_KEY}",
         "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
         "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}",

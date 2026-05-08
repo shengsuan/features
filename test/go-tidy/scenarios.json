@@ -1,0 +1,34 @@
+{
+    "install_go_tidy_ubuntu": {
+        "image": "ubuntu:focal",
+        "features": {
+            "go-tidy": {
+                "version": "latest"
+            }
+        }
+    },
+    "install_go_tidy_debian": {
+        "image": "debian:bullseye",
+        "features": {
+            "go-tidy": {
+                "version": "latest"
+            }
+        }
+    },
+    "install_go_tidy_alma-8": {
+        "image": "almalinux:8",
+        "features": {
+            "go-tidy": {
+                "version": "latest"
+            }
+        }
+    },
+    "install_go_tidy_fedora": {
+        "image": "fedora",
+        "features": {
+            "go-tidy": {
+                "version": "latest"
+            }
+        }
+    }
+}

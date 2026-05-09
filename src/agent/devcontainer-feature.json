@@ -1,6 +1,6 @@
 {
     "id": "agent",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "name": "AI Agent Tools",
     "documentationURL": "https://github.com/devcontainers/features/tree/main/src/agent",
     "description": "Installs AI programming agent tools including Claude Code CLI, OpenAI Codex CLI, and integration SDKs.",
@@ -23,11 +23,6 @@
             "type": "boolean",
             "default": true,
             "description": "Install Node.js if not present (required for some AI tools)."
-        },
-        "installPython": {
-            "type": "boolean",
-            "default": true,
-            "description": "Install Python if not present (required for OpenAI tools)."
         }
     },
     "customizations": {
@@ -47,7 +42,6 @@
     "installsAfter": [
         "ghcr.io/devcontainers/features/common-utils",
         "ghcr.io/devcontainers/features/git",
-        "ghcr.io/devcontainers/features/node",
-        "ghcr.io/devcontainers/features/python"
+        "ghcr.io/devcontainers/features/node"
     ]
 }

@@ -5,8 +5,7 @@
         "ghcr.io/shengsuan/features/agent:1": {
             "claudeCodeVersion": "latest",
             "installCodex": true,
-            "installNode": true,
-            "installPython": true
+            "installNode": true
         }
     },
     "customizations": {

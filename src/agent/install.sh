@@ -10,8 +10,7 @@
 CLAUDE_CODE_VERSION=${CLAUDECODEVERSION:-"latest"}
 INSTALL_CODEX=${INSTALLCODEX:-"true"}
 INSTALL_NODE=${INSTALLNODE:-"true"}
-INSTALL_PYTHON=${INSTALLPYTHON:-"true"}
-
+SHENGSUANYUN_API_KEY=${SHENGSUANYUNAPIKEY:-"none"}
 set -e
 
 # Clean up
@@ -67,12 +66,6 @@ echo "Installing for user: ${USERNAME}"
 if [ "${INSTALL_NODE}" = "true" ] && ! type node > /dev/null 2>&1; then
     echo "Installing Node.js..."
     check_packages nodejs npm
-fi
-
-# Install Python if requested and not present
-if [ "${INSTALL_PYTHON}" = "true" ] && ! type python3 > /dev/null 2>&1; then
-    echo "Installing Python..."
-    check_packages python3 python3-pip python3-venv
 fi
 
 # Install Claude Code CLI
@@ -162,6 +155,23 @@ if [ "${USERNAME}" != "root" ]; then
     USER_HOME=$(eval echo ~${USERNAME})
     mkdir -p "${USER_HOME}/.config/agent-tools"
     chown -R ${USERNAME}:${USERNAME} "${USER_HOME}/.config/agent-tools" 2>/dev/null || true
+fi
+
+if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
+    echo "Configuring Coding Helper with ShengSuanYun API key..."
+    coding-helper custom \
+        -url https://router.shengsuanyun.com/api/v1 \
+        -k ${SHENGSUANYUN_API_KEY} \
+        -m anthropic/claude-sonnet-4.6 \
+        -label 胜算云
+
+    echo "Configuring Codex with ShengSuanYun API key..."
+    coding-helper custom \
+        -url https://router.shengsuanyun.com/api/v1 \
+        -k ${SHENGSUANYUN_API_KEY} \
+        -m openai/gpt-5.3-codex \
+        -t codex \
+        -label 胜算云-codex
 fi
 
 # Create a helper script for AI agent tools

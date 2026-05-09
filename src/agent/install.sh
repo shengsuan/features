@@ -76,9 +76,7 @@ if [ "${CLAUDE_CODE_VERSION}" != "none" ]; then
     # Reference: https://code.claude.com/docs/en/overview
     if ! type claude > /dev/null 2>&1; then
         echo "Installing Claude Code using official installer..."
-
-        # Download and run the official install script (follow redirects with -L)
-        curl -fsSL https://claude.ai/install.sh | bash || echo "(!) Claude Code installation failed, creating fallback wrapper..."
+        npm install -g @anthropic-ai/claude-code|| echo "(!) Claude Code installation failed, creating fallback wrapper..."
     fi
 
     # Fallback: Create a wrapper script if installation failed
@@ -165,13 +163,25 @@ if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
         -m anthropic/claude-sonnet-4.6 \
         -label 胜算云
 
-    echo "Configuring Codex with ShengSuanYun API key..."
-    coding-helper custom \
-        -url https://router.shengsuanyun.com/api/v1 \
-        -k ${SHENGSUANYUN_API_KEY} \
-        -m openai/gpt-5.3-codex \
-        -t codex \
-        -label 胜算云-codex
+    if type codex > /dev/null 2>&1; then
+        echo "Configuring Codex with ShengSuanYun API key..."
+        coding-helper custom \
+            -url https://router.shengsuanyun.com/api/v1 \
+            -k ${SHENGSUANYUN_API_KEY} \
+            -m openai/gpt-5.3-codex \
+            -t codex \
+            -label 胜算云-codex
+    fi
+    
+    if tyepe claude > /dev/null 2>&1; then
+        echo "Configuring Claude Code CLI with ShengSuanYun API key..."
+        coding-helper custom \
+            -url https://router.shengsuanyun.com/api/v1 \
+            -k ${SHENGSUANYUN_API_KEY} \
+            -m anthropic/claude-sonnet-4.6 \
+            -t claude \
+            -label 胜算云-claude
+    fi
 fi
 
 # Create a helper script for AI agent tools

@@ -1,6 +1,6 @@
 {
     "id": "agent",
-    "version": "1.0.1",
+    "version": "2.0.0",
     "name": "AI Agent Tools",
     "documentationURL": "https://github.com/devcontainers/features/tree/main/src/agent",
     "description": "Installs AI programming agent tools including Claude Code CLI, OpenAI Codex CLI, and integration SDKs.",

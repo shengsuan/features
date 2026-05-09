@@ -155,15 +155,38 @@ if [ "${USERNAME}" != "root" ]; then
     chown -R ${USERNAME}:${USERNAME} "${USER_HOME}/.config/agent-tools" 2>/dev/null || true
 fi
 
+# Install runtime configuration script
+# Note: API key configuration has been moved to configure-runtime.sh
+# This prevents API keys from being leaked into the image layers
+echo "Installing runtime configuration script..."
+cat > /usr/local/bin/configure-agent-runtime << 'CONFIGURE_EOF'
+#!/usr/bin/env bash
+#-------------------------------------------------------------------------------------------------------------
+# Runtime Configuration Script for AI Agent Tools
+# This script should be run at container startup (postCreateCommand/postStartCommand)
+# to configure API keys without leaking them into the image layers.
+#-------------------------------------------------------------------------------------------------------------
+
+SHENGSUANYUN_API_KEY=${SHENGSUANYUN_API_KEY:-"none"}
+
+echo "Configuring AI Agent Tools at runtime..."
+
 if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
     echo "Configuring Coding Helper with ShengSuanYun API key..."
-    coding-helper custom \
-        -url https://router.shengsuanyun.com/api/v1 \
-        -k ${SHENGSUANYUN_API_KEY} \
-        -m anthropic/claude-sonnet-4.6 \
-        -label 胜算云
 
-    if type codex > /dev/null 2>&1; then
+    # Configure base Coding Helper
+    if type coding-helper > /dev/null 2>&1; then
+        coding-helper custom \
+            -url https://router.shengsuanyun.com/api/v1 \
+            -k ${SHENGSUANYUN_API_KEY} \
+            -m anthropic/claude-sonnet-4.6 \
+            -label 胜算云
+    else
+        echo "Warning: coding-helper not found, skipping configuration"
+    fi
+
+    # Configure Codex if available
+    if type codex > /dev/null 2>&1 && type coding-helper > /dev/null 2>&1; then
         echo "Configuring Codex with ShengSuanYun API key..."
         coding-helper custom \
             -url https://router.shengsuanyun.com/api/v1 \
@@ -172,8 +195,9 @@ if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
             -t codex \
             -label 胜算云-codex
     fi
-    
-    if type claude > /dev/null 2>&1; then
+
+    # Configure Claude Code CLI if available
+    if type claude > /dev/null 2>&1 && type coding-helper > /dev/null 2>&1; then
         echo "Configuring Claude Code CLI with ShengSuanYun API key..."
         coding-helper custom \
             -url https://router.shengsuanyun.com/api/v1 \
@@ -182,7 +206,16 @@ if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
             -t claude \
             -label 胜算云-claude
     fi
+
+    echo "Runtime configuration complete."
+else
+    echo "No SHENGSUANYUN_API_KEY provided, skipping API configuration."
+    echo "Set SHENGSUANYUN_API_KEY environment variable to configure automatically."
 fi
+CONFIGURE_EOF
+
+chmod +x /usr/local/bin/configure-agent-runtime
+echo "Runtime configuration script installed at: /usr/local/bin/configure-agent-runtime"
 
 # Create a helper script for AI agent tools
 cat > /usr/local/bin/agent-tools-info << 'EOF'

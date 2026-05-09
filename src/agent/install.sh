@@ -10,7 +10,7 @@
 CLAUDE_CODE_VERSION=${CLAUDECODEVERSION:-"latest"}
 INSTALL_CODEX=${INSTALLCODEX:-"true"}
 INSTALL_NODE=${INSTALLNODE:-"true"}
-SHENGSUANYUN_API_KEY=${SHENGSUANYUNAPIKEY:-"none"}
+SHENGSUANYUN_API_KEY=${SHENGSUANYUN_API_KEY:-"none"}
 set -e
 
 # Clean up
@@ -173,7 +173,7 @@ if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
             -label 胜算云-codex
     fi
     
-    if tyepe claude > /dev/null 2>&1; then
+    if type claude > /dev/null 2>&1; then
         echo "Configuring Claude Code CLI with ShengSuanYun API key..."
         coding-helper custom \
             -url https://router.shengsuanyun.com/api/v1 \

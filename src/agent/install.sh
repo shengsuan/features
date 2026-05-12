@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-#-------------------------------------------------------------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
-#-------------------------------------------------------------------------------------------------------------
-#
-# Docs: https://github.com/devcontainers/features/tree/main/src/agent
-# Maintainer: DevContainers Community
 
 CLAUDE_CODE_VERSION=${CLAUDECODEVERSION:-"latest"}
 INSTALL_CODEX=${INSTALLCODEX:-"true"}
@@ -142,9 +135,9 @@ fi
 
 echo "Installing Coding Helper integration tools..."
 # Reference: https://github.com/shengsuan/coding-helper
-if type npm > /dev/null 2>&1 && ! type coding-helper > /dev/null 2>&1; then
-    echo "Installing Coding Helper..."
-    npm install -g @coohu/coding-helper || echo "(!) Coding Helper installation failed"
+if type npm > /dev/null 2>&1; then
+    echo "Installing/updating Coding Helper to latest version..."
+    npm install -g @coohu/coding-helper@latest || echo "(!) Coding Helper installation failed"
 fi
 echo "Coding Helper tools installation complete."
 

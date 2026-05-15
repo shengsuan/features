@@ -27,7 +27,9 @@
         "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
         "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}",
         "OPENAI_BASE_URL": "${localEnv:OPENAI_BASE_URL}",
-        "ANTHROPIC_BASE_URL": "${localEnv:ANTHROPIC_BASE_URL}"
+        "ANTHROPIC_BASE_URL": "${localEnv:ANTHROPIC_BASE_URL}",
+        "CODEX_DEFAULT_MODEL": "${localEnv:CODEX_DEFAULT_MODEL}",
+        "CLAUDE_CODE_DEFAULT_MODEL": "${localEnv:CLAUDE_CODE_DEFAULT_MODEL}"
     },
     "postCreateCommand": "agent-tools-info"
 }

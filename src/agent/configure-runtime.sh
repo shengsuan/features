@@ -6,6 +6,8 @@
 #-------------------------------------------------------------------------------------------------------------
 
 SHENGSUANYUN_API_KEY=${SHENGSUANYUN_API_KEY:-"none"}
+CODEX_DEFAULT_MODEL=${CODEXDEFAULTMODEL:-"openai/gpt-5.3-codex"}
+CLAUDE_CODE_DEFAULT_MODEL=${CLAUDECODEDEFAULTMODEL:-"anthropic/claude-sonnet-4.6"}
 
 echo "Configuring AI Agent Tools at runtime..."
 
@@ -17,7 +19,7 @@ if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
         coding-helper custom \
             -url https://router.shengsuanyun.com/api/v1 \
             -k ${SHENGSUANYUN_API_KEY} \
-            -m anthropic/claude-sonnet-4.6 \
+            -m ${CLAUDE_CODE_DEFAULT_MODEL} \
             -label 胜算云
     else
         echo "Warning: coding-helper not found, skipping configuration"
@@ -29,7 +31,7 @@ if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
         coding-helper custom \
             -url https://router.shengsuanyun.com/api/v1 \
             -k ${SHENGSUANYUN_API_KEY} \
-            -m openai/gpt-5.3-codex \
+            -m ${CODEX_DEFAULT_MODEL} \
             -t codex \
             -label 胜算云-codex
     fi
@@ -40,7 +42,7 @@ if [ "${SHENGSUANYUN_API_KEY}" != "none" ]; then
         coding-helper custom \
             -url https://router.shengsuanyun.com/api/v1 \
             -k ${SHENGSUANYUN_API_KEY} \
-            -m anthropic/claude-sonnet-4.6 \
+            -m ${CLAUDE_CODE_DEFAULT_MODEL} \
             -t claude \
             -label 胜算云-claude
     fi
